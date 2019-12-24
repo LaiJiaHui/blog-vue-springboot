@@ -5,9 +5,9 @@
 
         <card-me class="me-area"></card-me>
 
-        <card-archive cardHeader="文章归档" :archives="archives"></card-archive>
-
         <card-tag  cardHeader="最热标签" :tags="hotTags"></card-tag>
+
+        <card-archive cardHeader="文章归档" :archives="archives"></card-archive>
 
       </el-aside>
 

@@ -14,7 +14,6 @@
 
       </el-aside>
 
-
       <el-main class="me-articles">
         <div class="me-month-title">{{currentArchive}}</div>
 
@@ -59,7 +58,7 @@
     },
     computed: {
       title (){
-        return this.currentArchive + ' - 文章归档 - For Fun'
+        return  '文章归档 - Gou Dan'
       },
       currentArchive (){
         if(this.article.query.year && this.article.query.month){

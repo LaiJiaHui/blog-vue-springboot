@@ -1,9 +1,7 @@
 <template>
-  <div class="me-allct-body" v-title :data-title="categoryTagTitle" >
+  <div class="me-allct-body" v-title :data-title="title" >
     <el-container class="me-allct-container">
       <el-main>
-        <el-tabs v-model="activeName">
-          <el-tab-pane label="文章分类" name="category">
             <ul class="me-allct-items">
               <li v-for="c in categorys" @click="view(c.id)" :key="c.id" class="me-allct-item">
                 <div class="me-allct-content">
@@ -12,31 +10,12 @@
                     <h4 class="me-allct-name">{{c.categoryname}}</h4>
                     <p class="me-allct-description">{{c.description}}</p>
                   </a>
-
                   <div class="me-allct-meta">
                     <span>{{c.articles}} 文章</span>
                   </div>
                 </div>
               </li>
             </ul>
-          </el-tab-pane>
-          <el-tab-pane label="标签" name="tag">
-            <ul class="me-allct-items">
-              <li v-for="t in tags" @click="view(t.id)" :key="t.id" class="me-allct-item">
-                <div class="me-allct-content">
-                  <a class="me-allct-info">
-                    <img class="me-allct-img" :src="t.avatar?t.avatar:defaultAvatar"/>
-                    <h4 class="me-allct-name">{{t.tagname}}</h4>
-                  </a>
-
-                  <div class="me-allct-meta">
-                    <span>{{t.articles}}  文章</span>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </el-tab-pane>
-        </el-tabs>
       </el-main>
     </el-container>
   </div>
@@ -48,34 +27,20 @@
   import {getAllTagsDetail} from '@/api/tag'
 
   export default {
-    name: 'BlogAllCategoryTag',
+    name: 'BlogCategory',
     created() {
       this.getCategorys()
-      this.getTags()
     },
     data() {
       return {
         defaultAvatar:defaultAvatar,
         categorys: [],
-        tags: [],
         currentActiveName: 'category'
       }
     },
     computed: {
-      activeName: {
-        get() {
-          return (this.currentActiveName = this.$route.params.type)
-        },
-        set(newValue) {
-          this.currentActiveName = newValue
-        }
-      },
-      categoryTagTitle (){
-        if(this.currentActiveName == 'category'){
-          return '文章分类 - Gou Dan'
-        }
-        console.info('dddd')
-        return '标签 - Gou Dan'
+      title (){
+        return  '文章分类 - Gou Dan'
       }
     },
     methods: {
@@ -86,21 +51,11 @@
         let that = this
         getAllCategorysDetail().then(data => {
           that.categorys = data.data
-        }).catch(error => {
+      }).catch(error => {
           if (error !== 'error') {
-            that.$message({type: 'error', message: '文章分类加载失败', showClose: true})
-          }
-        })
-      },
-      getTags() {
-        let that = this
-        getAllTagsDetail().then(data => {
-          that.tags = data.data
-        }).catch(error => {
-          if (error !== 'error') {
-            that.$message({type: 'error', message: '标签加载失败', showClose: true})
-          }
-        })
+          that.$message({type: 'error', message: '文章分类加载失败', showClose: true})
+        }
+      })
       }
     },
     //组件内的守卫 调整body的背景色
@@ -117,7 +72,7 @@
 
 <style>
   .me-allct-body {
-    margin: 60px auto 140px;
+    margin: 100px auto 140px;
   }
 
   .me-allct-container {
