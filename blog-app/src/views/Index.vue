@@ -1,6 +1,15 @@
 <template>
-  <div v-title data-title="ForFun Find Yourself">
+  <div v-title data-title="狗蛋的码农日志">
     <el-container>
+      <el-aside>
+
+        <card-me class="me-area"></card-me>
+
+        <card-archive cardHeader="文章归档" :archives="archives"></card-archive>
+
+        <card-tag  cardHeader="最热标签" :tags="hotTags"></card-tag>
+
+      </el-aside>
 
       <el-main class="me-articles">
 
@@ -10,12 +19,7 @@
 
       <el-aside>
 
-        <card-me class="me-area"></card-me>
-        <card-tag :tags="hotTags"></card-tag>
-
         <card-article cardHeader="最热文章" :articles="hotArticles"></card-article>
-
-        <card-archive cardHeader="文章归档" :archives="archives"></card-archive>
 
         <card-article cardHeader="最新文章" :articles="newArticles"></card-article>
 
@@ -112,12 +116,13 @@
 <style scoped>
 
   .el-container {
-    width: 960px;
+    width: 1440px;
   }
 
   .el-aside {
+    margin-right: 20px;
     margin-left: 20px;
-    width: 260px;
+    width: 320px;
   }
 
   .el-main {

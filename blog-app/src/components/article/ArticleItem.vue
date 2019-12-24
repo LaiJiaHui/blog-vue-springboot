@@ -1,7 +1,9 @@
 <template>
   <el-card class="me-area" :body-style="{ padding: '16px' }">
     <div class="me-article-header">
-
+      <div class="card-image">
+        <img @click="view(id)" :src="displayPicture" width="725" height="400" style="border-radius: 10px;" />
+      </div>
       <a @click="view(id)" class="me-article-title">{{title}}</a>
       <el-button v-if="weight > 0" class="me-article-icon" type="text">置顶</el-button>
       <span class="me-pull-right me-article-count">
@@ -39,6 +41,7 @@
       id: Number,
       weight: Number,
       title: String,
+      displayPicture: String,
       commentCounts: Number,
       viewCounts: Number,
       summary: String,
@@ -59,6 +62,9 @@
 
 <style scoped>
 
+  .card-image{
+    margin-bottom: 15px;
+  }
   .me-article-header {
     /*padding: 10px 18px;*/
     padding-bottom: 10px;

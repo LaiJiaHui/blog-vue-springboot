@@ -61,7 +61,7 @@ public class ArticleController {
     }
 
     @GetMapping("/hot")
-    @FastJsonView(include = {@FastJsonFilter(clazz = Article.class, props = {"id", "title"})})
+    @FastJsonView(include = {@FastJsonFilter(clazz = Article.class, props = {"id", "title","createDate","displayPicture"})})
     @LogAnnotation(module = "文章", operation = "获取最热文章")
     public Result listHotArticles() {
         int limit = 6;
@@ -71,7 +71,7 @@ public class ArticleController {
     }
 
     @GetMapping("/new")
-    @FastJsonView(include = {@FastJsonFilter(clazz = Article.class, props = {"id", "title"})})
+    @FastJsonView(include = {@FastJsonFilter(clazz = Article.class, props = {"id", "title","createDate","displayPicture"})})
     @LogAnnotation(module = "文章", operation = "获取最新文章")
     public Result listNewArticles() {
         int limit = 6;

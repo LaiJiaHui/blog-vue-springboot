@@ -51,6 +51,9 @@ public class Article extends BaseEntity<Integer> {
     @Column(name = "summary", length = 100)
     private String summary;
 
+    @Column(name = "display_picture", length = 100)
+    private String displayPicture;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
@@ -99,6 +102,13 @@ public class Article extends BaseEntity<Integer> {
         return title;
     }
 
+    public String getDisplayPicture() {
+        return displayPicture;
+    }
+
+    public void setDisplayPicture(String displayPicture) {
+        this.displayPicture = displayPicture;
+    }
 
     public void setTitle(String title) {
         this.title = title;
