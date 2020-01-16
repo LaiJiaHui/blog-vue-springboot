@@ -39,8 +39,8 @@ const router = new Router({
           component: r => require.ensure([], () => r(require('@/views/Index')), 'index')
         },
         {
-          path: '/log',
-          component: r => require.ensure([], () => r(require('@/views/Log')), 'log')
+          path: '/about',
+          component: r => require.ensure([], () => r(require('@/views/About')), 'about')
         },
       {
         path: '/category',

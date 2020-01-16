@@ -50,4 +50,14 @@ public class ResultTest {
 		String ss = JSON.toJSONString(s);
 		System.out.println(ss);
 	}
+	@Test
+	public void AATest() {
+		String sysnc="zwwx,test";
+		String[] split = sysnc.split("[;,]");
+		for (String s : split) {
+			System.out.println(s);
+
+		}
+	}
+
 }

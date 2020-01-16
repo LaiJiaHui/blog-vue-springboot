@@ -5,6 +5,8 @@
 
         <card-me class="me-area"></card-me>
 
+        <card-category  cardHeader="文章分类" :categorys="categorys"></card-category>
+
         <card-tag  cardHeader="最热标签" :tags="hotTags"></card-tag>
 
         <card-archive cardHeader="文章归档" :archives="archives"></card-archive>
@@ -34,15 +36,18 @@
   import CardArticle from '@/components/card/CardArticle'
   import CardArchive from '@/components/card/CardArchive'
   import CardTag from '@/components/card/CardTag'
+  import CardCategory from '@/components/card/CardCategory'
   import ArticleScrollPage from '@/views/common/ArticleScrollPage'
 
   import {getArticles, getHotArtices, getNewArtices} from '@/api/article'
   import {getHotTags} from '@/api/tag'
   import {listArchives} from '@/api/article'
+  import {getAllCategorysDetail} from '@/api/category'
 
   export default {
     name: 'Index',
     created() {
+      this.getCategorys()
       this.getHotArtices()
       this.getNewArtices()
       this.getHotTags()
@@ -50,6 +55,7 @@
     },
     data() {
       return {
+        categorys: [],
         hotTags: [],
         hotArticles: [],
         newArticles: [],
@@ -57,6 +63,16 @@
       }
     },
     methods: {
+      getCategorys() {
+        let that = this
+        getAllCategorysDetail().then(data => {
+          that.categorys = data.data
+      }).catch(error => {
+          if (error !== 'error') {
+          that.$message({type: 'error', message: '文章分类加载失败', showClose: true})
+        }
+      })
+      },
       getHotArtices() {
         let that = this
         getHotArtices().then(data => {
@@ -107,6 +123,7 @@
       'card-me': CardMe,
       'card-article': CardArticle,
       'card-tag': CardTag,
+      'card-category': CardCategory,
       ArticleScrollPage,
       CardArchive
     }

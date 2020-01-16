@@ -32,6 +32,15 @@ public class Category extends BaseEntity<Integer> {
     @NotBlank
     private String avatar;
 
+    private Integer parentid;
+
+    public Integer getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(Integer parentid) {
+        this.parentid = parentid;
+    }
 
     public String getCategoryname() {
         return categoryname;

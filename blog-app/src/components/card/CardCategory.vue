@@ -2,13 +2,10 @@
 
   <el-card :body-style="{ padding: '8px 18px' }">
     <div slot="header" class="me-category-header">
-      <span>最新文章</span>
+      <span>分类</span>
     </div>
-
     <ul class="me-category-list">
-      <li class="me-category-item" v-for="l in 3" :key="l"><a>为什么程序员那么有钱为什么程序员那么有钱为什么程序员那么有钱</a></li>
-      <li class="me-category-item" v-for="l in 3" :key="l"><a>搭建element-ui的Vue前端工程操作</a></li>
-
+      <li class="me-category-item" v-for="c in categorys" :key="c.id"><a @click="view(c.id)">{{c.categoryname}}</a></li>
     </ul>
   </el-card>
 
@@ -17,10 +14,17 @@
 <script>
   export default {
     name: 'CardCategory',
+    props: {
+      categorys: Array
+    },
     data() {
       return {}
     },
-    methods: {}
+    methods: {
+      view(id) {
+        this.$router.push({path: `/category/${id}`})
+      }
+    }
   }
 </script>
 

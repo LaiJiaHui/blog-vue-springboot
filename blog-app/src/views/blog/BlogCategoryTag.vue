@@ -17,16 +17,32 @@
           <span class="me-ct-meta">{{ct.articles}} 文章</span>
         </div>
 
-        <div class="me-ct-articles">
-          <article-scroll-page v-bind="article"></article-scroll-page>
-        </div>
+        <el-container>
+          <el-aside id="el-left">
+            <el-tree
+              :data="data"
+              :props="defaultProps"
+              @node-click="handleNodeClick">
+            </el-tree>
+          </el-aside>
 
+          <el-main>
+          <div class="me-ct-articles">
+            <article-scroll-page v-bind="article"></article-scroll-page>
+          </div>
+          </el-main>
+
+          <el-aside id="el-right">
+            <card-me class="me-area"></card-me>
+          </el-aside>
+        </el-container>
       </el-main>
     </el-container>
   </div>
 </template>
 
 <script>
+  import CardMe from '@/components/card/CardMe'
   import ArticleScrollPage from '@/views/common/ArticleScrollPage'
   import {getArticlesByCategory, getArticlesByTag} from '@/api/article'
   import {getTagDetail} from '@/api/tag'
@@ -52,6 +68,45 @@
             categoryId: ''
           }
         },
+        data: [{
+          label: '一级 1',
+          children: [{
+            label: '二级 1-1',
+            children: [{
+              label: '三级 1-1-1'
+            }]
+          }]
+        }, {
+          label: '一级 2',
+          children: [{
+            label: '二级 2-1',
+            children: [{
+              label: '三级 2-1-1'
+            }]
+          }, {
+            label: '二级 2-2',
+            children: [{
+              label: '三级 2-2-1'
+            }]
+          }]
+        }, {
+          label: '一级 3',
+          children: [{
+            label: '二级 3-1',
+            children: [{
+              label: '三级 3-1-1'
+            }]
+          }, {
+            label: '二级 3-2',
+            children: [{
+              label: '三级 3-2-1'
+            }]
+          }]
+        }],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        }
       }
     },
     computed: {
@@ -63,6 +118,9 @@
       }
     },
     methods: {
+      handleNodeClick(data) {
+        console.log(data);
+      },
       getCategoryOrTagAndArticles() {
         let id = this.$route.params.id
         let type = this.$route.params.type
@@ -117,12 +175,24 @@
       }
     },
     components: {
+      'card-me': CardMe,
       ArticleScrollPage
     }
   }
 </script>
 
 <style>
+
+  #el-left {
+    margin-top: 50px;
+    margin-left: 30px;
+    width: 320px;
+  }
+  #el-right {
+    margin-top: 50px;
+    margin-right: 50px;
+    width: 320px;
+  }
   .me-ct-body {
     margin: 60px auto 140px;
     min-width: 100%;
@@ -153,8 +223,9 @@
   }
 
   .me-ct-articles {
-    width: 640px;
-    margin: 30px auto;
+    width: 760px;
+    margin-top: 30px;
+    margin-left: 70px;
   }
 
 </style>

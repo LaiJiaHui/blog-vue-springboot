@@ -28,13 +28,14 @@ public class CategoryRepositoryImpl implements CategoryWrapper {
     public List<CategoryVO> findAllDetail() {
 
         String sql = "select c.*, count(a.category_id) as articles from me_category c "
-                + "left join me_article a on a.category_id = c.id group by c.id";
+                + "left join me_article a on a.category_id = c.id where c.parentid=0 group by c.id";
 
         SQLQuery query = getSession().createSQLQuery(sql);
         query.addScalar("id");
         query.addScalar("categoryname");
         query.addScalar("description");
         query.addScalar("avatar");
+        query.addScalar("parentid");
         query.addScalar("articles", IntegerType.INSTANCE);
 
         query.setResultTransformer(Transformers.aliasToBean(CategoryVO.class));
