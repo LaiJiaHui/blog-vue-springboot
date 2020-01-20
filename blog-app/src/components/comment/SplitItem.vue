@@ -1,40 +1,40 @@
 <template>
   <div class="me-view-comment-item">
     <div class="me-view-comment-author">
+      <el-row>
+        <el-col :span="2">
       <a class="">
-        <img class="me-view-picture" :src="comment.author.avatar"></img>
+        <img class="me-view-picture" :src="avatar"></img>
       </a>
+        </el-col>
+        <el-col :span="22">
       <div class="me-view-info">
-        <span class="me-view-nickname">{{comment.author.nickname}}</span>
-        <div class="me-view-meta">
-          <span>{{rootCommentCounts - index}}楼</span>
-          <span>{{comment.createDate | format}}</span>
-        </div>
+        <span class="me-view-nickname">{{split.authorName}}</span>
+        <span>{{split.createDate | format}}</span>
       </div>
-    </div>
-    <div>
-      <p class="me-view-comment-content">{{comment.content}}</p>
-      <div class="me-view-comment-tools">
-        <!--<a class="me-view-comment-tool">-->
-        <!--<i class="el-icon-caret-top"></i> 20-->
-        <!--</a>-->
+      <span class="me-view-comment-content">{{split.content}}</span>
+      <span class="me-view-comment-tools">
         <a class="me-view-comment-tool" @click="showComment(-1)">
           <i class="me-icon-comment"></i>&nbsp; 评论
         </a>
-      </div>
+      </span>
+        </el-col>
+      </el-row>
+    </div>
+    <div>
 
       <div class="me-reply-list">
-        <div class="me-reply-item" v-for="c in comment.childrens" :key="c.id">
+        <div class="me-reply-item" v-for="c in split.childrens" :key="c.id">
           <div style="font-size: 14px">
-            <span class="me-reply-user">{{c.author.nickname}}:&nbsp;&nbsp;</span>
+            <span class="me-reply-user">{{c.authorName}}:&nbsp;&nbsp;</span>
 
-            <span v-if="c.level == 2" class="me-reply-user">@{{c.toUser.nickname}} </span>
+            <span if class="me-reply-user">@{{c.toUserName}} </span>
 
             <span>{{c.content}}</span>
           </div>
           <div class="me-view-meta">
             <span style="padding-right: 10px">{{c.createDate | format}}</span>
-            <a class="me-view-comment-tool" @click="showComment(c.id, c.author)">
+            <a class="me-view-comment-tool" @click="showComment(split.id, c.authorName)">
               <i class="me-icon-comment"></i>&nbsp;回复
             </a>
           </div>
@@ -53,45 +53,49 @@
           </el-input>
 
           <el-button style="margin-left: 8px" @click="publishComment()" type="text">评论</el-button>
-
         </div>
-
       </div>
-
     </div>
+    <el-divider></el-divider>
   </div>
+
 </template>
 
 <script>
-  import {publishComment} from '@/api/comment'
+  import default_avatar from '@/assets/img/default_avatar.png'
+  import {replySplit,thumbsSplit} from '@/api/split'
 
   export default {
-    name: "CommentItem",
+    name: "SplitItem",
     props: {
-      articleId: Number,
-      comment: Object,
+      split: Object,
       index: Number,
       rootCommentCounts: Number
     },
     data() {
       return {
-        placeholder: '你的评论...',
+        placeholder: '你的吐槽...',
         commentShow: false,
         commentShowIndex: '',
         reply: this.getEmptyReply()
       }
     },
+    computed: {
+      avatar() {
+        return default_avatar
+      }
+    },
     methods: {
-      showComment(commentShowIndex, toUser) {
+      showComment(commentShowIndex, toUserName) {
         this.reply = this.getEmptyReply()
 
         if (this.commentShowIndex !== commentShowIndex) {
 
-          if (toUser) {
-            this.placeholder = `@${toUser.nickname}`
-            this.reply.toUser = toUser
+          if (toUserName) {
+            this.placeholder = `@${toUserName} `
+            this.reply.toUserName = toUserName
           } else {
-            this.placeholder = '你的评论...'
+            this.placeholder = '你的吐槽...'
           }
 
           this.commentShow = true
@@ -107,13 +111,9 @@
           return;
         }
 
-        publishComment(that.reply).then(data => {
+        replySplit(that.reply).then(data => {
           that.$message({type: 'success', message: '评论成功', showClose: true})
-          if(!that.comment.childrens){
-            that.comment.childrens = []
-          }
-          that.comment.childrens.unshift(data.data)
-          that.$emit('commentCountsIncrement')
+          that.split = data.data.split
           that.showComment(that.commentShowIndex)
         }).catch(error => {
           if (error !== 'error') {
@@ -124,13 +124,8 @@
       },
       getEmptyReply() {
         return {
-          article: {
-            id: this.articleId
-          },
-          parent: {
-            id: this.comment.id
-          },
-          toUser: '',
+          parentId: this.split.id,
+          toUserName: '',
           content: ''
         }
       }

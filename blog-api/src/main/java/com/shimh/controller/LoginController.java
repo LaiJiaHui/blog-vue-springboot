@@ -34,6 +34,7 @@ import com.shimh.service.UserService;
  * 2018年1月23日
  */
 @RestController
+@RequestMapping(value = "/api")
 public class LoginController {
 
     @Autowired
