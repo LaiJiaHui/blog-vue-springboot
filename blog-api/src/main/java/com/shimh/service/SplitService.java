@@ -14,7 +14,7 @@ public interface SplitService {
 
     Split saveSplit(Split split);
 
-    void thumbsSplit(Integer id);
+    boolean thumbsSplit(Integer id);
 
     List<Split> getSplitList(PageEntity pageEntity);
 

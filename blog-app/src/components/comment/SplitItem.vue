@@ -9,15 +9,21 @@
         </el-col>
         <el-col :span="22">
       <div class="me-view-info">
-        <span class="me-view-nickname">{{split.authorName}}</span>
-        <span>{{split.createDate | format}}</span>
+        <span class="me-reply-user">{{split.authorName}}</span>
+        <span class="me-view-comment-content">&nbsp;&nbsp;&nbsp;&nbsp;{{split.content}}</span>
       </div>
-      <span class="me-view-comment-content">{{split.content}}</span>
-      <span class="me-view-comment-tools">
-        <a class="me-view-comment-tool" @click="showComment(-1)">
-          <i class="me-icon-comment"></i>&nbsp; 评论
-        </a>
-      </span>
+          <div class="me-view-info">
+            &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <span>{{split.createDate | format}}</span>
+          <span class="me-view-comment-tools">
+          <a class="me-view-comment-tool" @click="showComment(-1)">
+          &nbsp;&nbsp; <i class="me-icon-comment"></i>评论
+          </a>
+            <a class="me-view-comment-tool" @click="thumbs(split)">
+               <i class="el-icon-thumb"></i>&nbsp;点赞数:{{split.thumbup}}
+            </a>
+          </span>
+          </div>
         </el-col>
       </el-row>
     </div>
@@ -27,15 +33,17 @@
         <div class="me-reply-item" v-for="c in split.childrens" :key="c.id">
           <div style="font-size: 14px">
             <span class="me-reply-user">{{c.authorName}}:&nbsp;&nbsp;</span>
-
-            <span if class="me-reply-user">@{{c.toUserName}} </span>
-
-            <span>{{c.content}}</span>
+            <span v-if="c.toUserName" class="me-reply-user">@{{c.toUserName}} </span>
+            <span>&nbsp;&nbsp;{{c.content}}</span>
           </div>
           <div class="me-view-meta">
+            &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <span style="padding-right: 10px">{{c.createDate | format}}</span>
             <a class="me-view-comment-tool" @click="showComment(split.id, c.authorName)">
               <i class="me-icon-comment"></i>&nbsp;回复
+            </a>
+            <a class="me-view-comment-tool" @click="thumbs(c)">
+               <i class="el-icon-thumb"></i>&nbsp;点赞数:{{c.thumbup}}
             </a>
           </div>
 
@@ -86,6 +94,23 @@
       }
     },
     methods: {
+      thumbs(split){
+        let that = this
+        thumbsSplit(split.id).then(data => {
+          if(data.data.thumbs){
+            split.thumbup=split.thumbup+1
+            that.$message({type: 'success', message: '点赞成功', showClose: true})
+          }else {
+            split.thumbup=split.thumbup-1
+            that.$message({type: 'success', message: '取消点赞', showClose: true})
+          }
+      }).catch(error => {
+          if (error !== 'error') {
+          that.$message({type: 'error', message: '点赞失败', showClose: true})
+        }
+      })
+
+      },
       showComment(commentShowIndex, toUserName) {
         this.reply = this.getEmptyReply()
 

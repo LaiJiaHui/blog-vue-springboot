@@ -43,9 +43,6 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    @Autowired
-    private TagService tagService;
-
     @GetMapping
     @FastJsonView(
             exclude = {

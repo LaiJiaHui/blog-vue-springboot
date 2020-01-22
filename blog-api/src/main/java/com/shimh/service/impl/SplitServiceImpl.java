@@ -1,5 +1,6 @@
 package com.shimh.service.impl;
 
+import com.shimh.common.util.RedisClient;
 import com.shimh.common.util.StringUtils;
 import com.shimh.common.util.UserUtils;
 import com.shimh.entity.PageEntity;
@@ -8,6 +9,7 @@ import com.shimh.entity.User;
 import com.shimh.repository.SplitRepository;
 import com.shimh.service.SplitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,6 +25,9 @@ public class SplitServiceImpl implements SplitService {
 
     @Autowired
     private SplitRepository splitRepository;
+
+    @Autowired
+    private RedisClient redisClient;
 
 
     @Override
@@ -40,8 +45,19 @@ public class SplitServiceImpl implements SplitService {
     }
 
     @Override
-    public void thumbsSplit(Integer id) {
-        splitRepository.thumbsSplit(id);
+    public boolean thumbsSplit(Integer id) {
+        Long userId = UserUtils.getCurrentUser().getId();
+        String s = redisClient.get("thumbs" + userId + id);
+        boolean result=false;
+        if (StringUtils.isEmpty(s)) {
+            splitRepository.thumbsSplit(id);
+            redisClient.setex("thumbs" + userId + id, 60 * 60 * 24, "1");
+            result=true;
+        }else {
+            splitRepository.delThumbsSplit(id);
+            redisClient.del("thumbs" + userId + id);
+        }
+        return result;
     }
 
     @Override

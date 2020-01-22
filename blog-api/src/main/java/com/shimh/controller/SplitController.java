@@ -5,14 +5,18 @@ import com.shimh.common.result.Result;
 import com.shimh.entity.Comment;
 import com.shimh.entity.PageEntity;
 import com.shimh.entity.Split;
+import com.shimh.repository.SplitRepository;
 import com.shimh.service.SplitService;
 import com.shimh.vo.PageVo;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author linguochao
@@ -25,6 +29,9 @@ public class SplitController {
 
     @Autowired
     private SplitService splitService;
+
+    @Autowired
+    private SplitRepository splitRepository;
 
     @PostMapping("/create")
     @RequiresAuthentication
@@ -48,17 +55,22 @@ public class SplitController {
     @RequiresAuthentication
     @LogAnnotation(module = "吐槽", operation = "点赞吐槽")
     public Result thumbsSplit(@PathVariable("id") Integer id) {
-        splitService.thumbsSplit(id);
+        boolean b = splitService.thumbsSplit(id);
         Result r = Result.success();
-        return Result.success();
+        r.simple().put("thumbs", b);
+        return r;
     }
 
     @PostMapping("/list")
     @LogAnnotation(module = "吐槽", operation = "查询吐槽列表")
     public Result getSplit(@Validated @RequestBody PageEntity pageEntity) {
         List<Split> splits = splitService.getSplitList(pageEntity);
+        int total = splitRepository.countByParentId(0);
+        Map map=new HashMap();
+        map.put("splits", splits);
+        map.put("total", total);
         Result r = Result.success();
-        r.simple().put("splits", splits);
+        r.setData(map);
         return r;
     }
 

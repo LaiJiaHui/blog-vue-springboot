@@ -44,6 +44,13 @@
               :key="c.id">
             </split-item>
 
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              @current-change="handleCurrentChange"
+              :total="total">
+            </el-pagination>
+
           </div>
         </div>
       </el-main>
@@ -65,8 +72,9 @@
       return {
         pageVo: {
           pageNum: 0 ,
-          pageSize: 10
+          pageSize: 5
         },
+        total:0,
         splits:[],
         split: {
           content: ''
@@ -88,12 +96,16 @@
     },
 
     methods: {
+      handleCurrentChange(val) {
+        let that = this
+        that.pageVo.pageNum=val-1
+        this.getSplit()
+      },
       publishComment() {
         let that = this
         if (!that.split.content) {
           return;
         }
-
         createSplit(that.split).then(data => {
           that.$message({type: 'success', message: '吐槽成功', showClose: true})
           that.split.content = ''
@@ -108,7 +120,9 @@
       getSplit(){
         let that = this
         getSplitlist(that.pageVo).then(data => {
+          that.total = data.data.total
           that.splits = data.data.splits
+
         })
       }
 
